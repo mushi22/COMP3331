@@ -1,42 +1,50 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 
 public class GraphImple implements Graph<Graphnode> {
 
 	public ArrayList<Graphnode> nodes;
-	public ArrayList<ArrayList<Graphnode>> directedTo;
+	public ArrayList<HashMap<Graphnode,Integer>> directedTo;
+
 	private int nodeCount = 0;
 	public int edgeCount = 0;
 
 	public GraphImple() {
 		nodes = new ArrayList<Graphnode>();
-		directedTo = new ArrayList<ArrayList<Graphnode>>();
+		directedTo = new ArrayList<HashMap<Graphnode,Integer>>();
 	}
 
 	@Override
 	public void addNode(Graphnode node) {
 		// TODO Auto-generated method stub
+		//if nodes array doesnt have it, then we can add it
 		if (!nodes.contains(node)) {
 			nodes.add(node);
-			directedTo.add(new ArrayList<Graphnode>());
+			directedTo.add(new HashMap<Graphnode,Integer>());
 			setNodeCount(getNodeCount() + 1);
 		}
 	}
 
-	@Override
-	public void addEdge(Graphnode from, Graphnode to) {
+	public void addEdge(Graphnode from, Graphnode to, int weight) {
 		// TODO Auto-generated method stub
+		//if both nodes passed in, are in the all nodes array
 		if (nodes.contains(from) && nodes.contains(to)) {
+			//get index of the from node
 			int j = nodes.indexOf(from);
-
-			if (!directedTo.get(j).contains(from)) {
-				directedTo.get(j).add(to);
+            //checking that the edge hasnt already been added
+			if (!directedTo.get(j).containsKey(from)) {
+				
+				directedTo.get(j).put(to, weight);
 				setEdgeCount(getEdgeCount() + 1);
 			}
 		}
 	}
+	
+	
 
 	@Override
 	public void deleteNode(Graphnode node) {
@@ -44,7 +52,7 @@ public class GraphImple implements Graph<Graphnode> {
 		if (nodes.contains(node)) {
 			for (int i = 0; i < directedTo.size(); i++) {
 				directedTo.get(i).remove(node);
-				if (directedTo.get(i).contains(node)) {
+				if (directedTo.get(i).containsKey(node)) {
 					directedTo.get(i).remove(node);
 					setEdgeCount(getEdgeCount() - 1);
 				}
@@ -61,7 +69,7 @@ public class GraphImple implements Graph<Graphnode> {
 		if (nodes.contains(from) && nodes.contains(to)) {
 			int j = nodes.indexOf(from);
 
-			if (directedTo.get(j).contains(to)) {
+			if (directedTo.get(j).containsKey(to)) {
 				directedTo.get(j).remove(to);
 				setEdgeCount(getEdgeCount() - 1);
 			}
@@ -74,8 +82,9 @@ public class GraphImple implements Graph<Graphnode> {
 		boolean exists = false;
 		if (nodes.contains(from) && nodes.contains(to)) {
 			int j = nodes.indexOf(from);
-			if (directedTo.get(j).contains(to)) {
+			if (directedTo.get(j).containsKey(to)) {
 				exists = true;
+
 			}
 
 		}
@@ -120,9 +129,7 @@ public class GraphImple implements Graph<Graphnode> {
 
 	@Override
 	public ArrayList<Graphnode> bfs(Graphnode initial, Graphnode goal) {
-		
-		
-		
+				
 		LinkedList<Graphnode> toVisit = new LinkedList<Graphnode>();
 		ArrayList<Graphnode> visited = new ArrayList<Graphnode>();
 		ArrayList<Graphnode> connected = new ArrayList<Graphnode>();
@@ -167,13 +174,44 @@ public class GraphImple implements Graph<Graphnode> {
 	
 	@Override
 	public ArrayList<Graphnode> getNeighbors(Graphnode node) {
-		return directedTo.get(nodes.indexOf(node));
+		//System.out.println("in here");
+		ArrayList<Graphnode> neighbours = new ArrayList<Graphnode>();	
+		
+		//get the hashmap thats located at the index in the directedTo array, of the node we are checking neigbours for
+		HashMap<Graphnode,Integer> h = directedTo.get(nodes.indexOf(node));
+		
+		//get a set of all the neighours (which are the keys to the hashmap)
+		Set<Graphnode> keyset = h.keySet();
+		
+		//adding every element of keyset to an array
+		for(Graphnode n: keyset){
+			//System.out.println(n.getName());
+			neighbours.add(n);
+		}
+//		for(Graphnode n: neighbours){
+//			//System.out.println(n.getName());
+//		}
+		//System.out.println(neighbours.size());
+		return neighbours;
+		
+		
+	}
+
+	public void addNonDEdge(Graphnode a, Graphnode b, int weight) {
+		addEdge(a, b,weight);
+		addEdge(b, a,weight);
+	}
+
+	@Override
+	public void addEdge(Graphnode from, Graphnode to) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void addNonDEdge(Graphnode a, Graphnode b) {
-		addEdge(a, b);
-		addEdge(b, a);
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

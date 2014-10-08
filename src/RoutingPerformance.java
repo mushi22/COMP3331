@@ -41,30 +41,61 @@ public class RoutingPerformance {
 		System.out.println("packet rate:"+ " " +packetRate);
 		
 		GraphImple graph = new GraphImple();
-		Graphnode a = new Graphnode("a");
-		Graphnode b = new Graphnode("b");
-		Graphnode c = new Graphnode("c");
-		Graphnode d = new Graphnode("d");
-		Graphnode e = new Graphnode("e");
-		Graphnode f = new Graphnode("f");
-		Graphnode g = new Graphnode("g");
-		Graphnode h = new Graphnode("h");
-		Graphnode i = new Graphnode("i");
-		Graphnode j = new Graphnode("j");
-		Graphnode k = new Graphnode("k");
+		Graphnode A = new Graphnode("A");
+		Graphnode B = new Graphnode("B");
+		Graphnode C = new Graphnode("C");
+		Graphnode D = new Graphnode("D");
+		Graphnode E = new Graphnode("E");
+		Graphnode F = new Graphnode("F");
+		Graphnode G = new Graphnode("G");
+		Graphnode H = new Graphnode("H");
+		Graphnode I = new Graphnode("I");
+		Graphnode J = new Graphnode("J");
+		Graphnode K = new Graphnode("K");
+		Graphnode L = new Graphnode("L");
+		Graphnode M = new Graphnode("M");
+		Graphnode N = new Graphnode("N");
+		Graphnode O = new Graphnode("O");
+		Graphnode P = new Graphnode("P");
+		Graphnode Q = new Graphnode("Q");
+		Graphnode R = new Graphnode("R");
+		Graphnode S = new Graphnode("S");
+		Graphnode T = new Graphnode("T");
+		Graphnode U = new Graphnode("U");
+		Graphnode V = new Graphnode("V");
+		Graphnode W = new Graphnode("W");
+		Graphnode X = new Graphnode("X");
+		Graphnode Y = new Graphnode("Y");
+		Graphnode Z = new Graphnode("Z");
 		
-		graph.addNode(a);
-		graph.addNode(b);
-		graph.addNode(c);
-		graph.addNode(d);
-		graph.addNode(e);
-		graph.addNode(f);
-		graph.addNode(g);
-		graph.addNode(h);
-		graph.addNode(i);
-		graph.addNode(j);
-		graph.addNode(k);
+		graph.addNode(A);
+		graph.addNode(B);
+		graph.addNode(C);
+		graph.addNode(D);
+		graph.addNode(E);
+		graph.addNode(F);
+		graph.addNode(G);
+		graph.addNode(H);
+		graph.addNode(I);
+		graph.addNode(J);
+		graph.addNode(K);
+		graph.addNode(L);
+		graph.addNode(M);
+		graph.addNode(N);
+		graph.addNode(O);
+		graph.addNode(P);
+		graph.addNode(Q);
+		graph.addNode(R);
+		graph.addNode(S);
+		graph.addNode(T);
+		graph.addNode(U);
+		graph.addNode(V);
+		graph.addNode(W);
+		graph.addNode(X);
+		graph.addNode(Y);
+		graph.addNode(Z);
 		
+		/**
 		graph.addNonDEdge(a, b);
 		graph.addNonDEdge(a, d);
 		graph.addNonDEdge(b, c);
@@ -78,9 +109,10 @@ public class RoutingPerformance {
 		graph.addNonDEdge(g, h);
 		graph.addNonDEdge(j, i);
 		graph.addNonDEdge(i, k);
+		**/
 		
-		ArrayList<Graphnode> path = graph.bfs(a, k);
-		printList(path);
+		//ArrayList<Graphnode> path = graph.bfs(a, k);
+	//	printList(path);
 
 	}
 	public static void printList(ArrayList<Graphnode> list){

@@ -41,8 +41,12 @@ public class RoutingPerformance {
 		System.out.println("packet rate:"+ " " +packetRate);
 		System.out.println("testhing this");
 		GraphImple graph = new GraphImple();
+
 		
 		//WE need to hard code this for A-Z
+	
+		//We also need to hardcode this
+
 		Graphnode A = new Graphnode("A");
 		Graphnode B = new Graphnode("B");
 		Graphnode C = new Graphnode("C");
@@ -54,7 +58,23 @@ public class RoutingPerformance {
 		Graphnode I = new Graphnode("I");
 		Graphnode J = new Graphnode("J");
 		Graphnode K = new Graphnode("K");
-		//We also need to hardcode this
+		Graphnode L = new Graphnode("L");
+		Graphnode M = new Graphnode("M");
+		Graphnode N = new Graphnode("N");
+		Graphnode O = new Graphnode("O");
+		Graphnode P = new Graphnode("P");
+		Graphnode Q = new Graphnode("Q");
+		Graphnode R = new Graphnode("R");
+		Graphnode S = new Graphnode("S");
+		Graphnode T = new Graphnode("T");
+		Graphnode U = new Graphnode("U");
+		Graphnode V = new Graphnode("V");
+		Graphnode W = new Graphnode("W");
+		Graphnode X = new Graphnode("X");
+		Graphnode Y = new Graphnode("Y");
+		Graphnode Z = new Graphnode("Z");
+		
+
 		graph.addNode(A);
 		graph.addNode(B);
 		graph.addNode(C);
@@ -66,6 +86,7 @@ public class RoutingPerformance {
 		graph.addNode(I);
 		graph.addNode(J);
 		graph.addNode(K);
+
 		//this loop for topology
 		br = new BufferedReader(new InputStreamReader(tFile, Charset.forName("UTF-8")));
 		while ((line = br.readLine()) != null) {
@@ -96,6 +117,42 @@ public class RoutingPerformance {
 		//graph.getNeighbors(a);
 		ArrayList<Graphnode> path = graph.bfs(A, K);
 	    printList(path);
+
+		graph.addNode(L);
+		graph.addNode(M);
+		graph.addNode(N);
+		graph.addNode(O);
+		graph.addNode(P);
+		graph.addNode(Q);
+		graph.addNode(R);
+		graph.addNode(S);
+		graph.addNode(T);
+		graph.addNode(U);
+		graph.addNode(V);
+		graph.addNode(W);
+		graph.addNode(X);
+		graph.addNode(Y);
+		graph.addNode(Z);
+		
+		/**
+		graph.addNonDEdge(a, b);
+		graph.addNonDEdge(a, d);
+		graph.addNonDEdge(b, c);
+		graph.addNonDEdge(c, d);
+		graph.addNonDEdge(d, g);
+		graph.addNonDEdge(d, e);
+		graph.addNonDEdge(e, f);
+		graph.addNonDEdge(f, g);
+		graph.addNonDEdge(f, j);
+		graph.addNonDEdge(g, j);
+		graph.addNonDEdge(g, h);
+		graph.addNonDEdge(j, i);
+		graph.addNonDEdge(i, k);
+		**/
+		
+		//ArrayList<Graphnode> path = graph.bfs(a, k);
+	//	printList(path);
+
 
 	}
 	public static void printList(ArrayList<Graphnode> list){

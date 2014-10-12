@@ -389,6 +389,7 @@ public class RoutingPerformance {
 
 		while (!NodeQueue.isEmpty()) {
 			double weight=1;
+			double distanceThroughU=0;
 		    Node n = NodeQueue.poll();
            // System.out.println("Main node: "+n.toString());
 	            // Visit each edge exiting u
@@ -397,14 +398,22 @@ public class RoutingPerformance {
 	            
 	                Node v = e.to;
 	                //System.out.println("visiting: "+v.toString());
-	                if(routingScheme.equals("SHP")){
-	                	weight = e.SHPDistance;
+	                
+	                if(routingScheme.equals("LLP")){
+	                	distanceThroughU = e.load;
 	                }
-	                if(routingScheme.equals("SDP")){
-	                	weight = e.delay;
+	                else{
+		            
+		                if(routingScheme.equals("SHP")){
+		                	weight = e.SHPDistance;
+		                }
+		                if(routingScheme.equals("SDP")){
+		                	weight = e.delay;
+		                }
+		                
+		               
+		                distanceThroughU = n.minDistance + weight;
 	                }
-	               
-	                double distanceThroughU = n.minDistance + weight;
 					if (distanceThroughU < v.minDistance) {
 					    NodeQueue.remove(v);
 					    v.minDistance = distanceThroughU ;

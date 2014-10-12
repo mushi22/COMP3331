@@ -273,7 +273,7 @@ public class RoutingPerformance {
             
                System.out.println("src: "+src.toString()+" dest; "+dest.toString());
            	
-       		
+       		   //reset all values for djikstra algorithm use
     		   for(Node n:graph){
     			   n.minDistance = Double.POSITIVE_INFINITY;
     			   n.previous = null;

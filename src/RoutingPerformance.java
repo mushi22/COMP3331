@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.ListIterator;
 import java.util.PriorityQueue;
 
 
@@ -485,14 +486,18 @@ class Edge{
 		System.out.print("load++ for edge " + from.toString() + "->" + to.toString() + " now " + load + "/" + capacity+ "\n" );
 	}
 	public void update(int end){
-		System.out.println("called update");
-		for(int i: workLoad){
-			if(end >= i){
-				//workLoad.remove(i);
-				load--;
-				System.out.println("Released finished load " + from.toString() + "->" + to.toString() + " now " + load + "/" + capacity);
-			}
-		}
+		 ListIterator it = workLoad.listIterator();
+	    while (it.hasNext()){
+	        int curr = (Integer)it.next();
+	        //-->>System.out.print("Updating curr for " + srcNode + " " + destNode + " " + curr + " - " + expired + " = " + (curr-expired) + "\n");
+	        if (end >= curr){
+	          it.remove();
+	          load--;
+	          System.out.println("Released finished load " + from.toString() + "->" + to.toString() + " now " + load + "/" + capacity);
+	        }
+	      }
+		
+		
 	}
 
 	

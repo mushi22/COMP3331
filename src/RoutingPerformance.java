@@ -22,10 +22,10 @@ public class RoutingPerformance {
 	public static ArrayList<Integer> hops = new ArrayList<Integer>();
 	public static ArrayList<Integer> cost = new ArrayList<Integer>();
 	public static int successfulRequests=0;
-	public static int blockedRequests = 0;
+	public static int busyRequests = 0;
 	public static int virtualCircuitRequests=0;
 	public static float requestSuccessRate=0;
-	public static float blockedRequestRate=0;
+	public static float busyRequestRate=0;
 
 	public static void main(String[] args) throws FileNotFoundException {
 
@@ -180,16 +180,16 @@ public class RoutingPerformance {
 			processWorkLoad(wFile);
 			
 			requestSuccessRate = ((float)successfulRequests/virtualCircuitRequests * 100);
-			blockedRequestRate = ((float)blockedRequests/virtualCircuitRequests * 100);
+			busyRequestRate = ((float)busyRequests/virtualCircuitRequests * 100);
 
 			    System.out.println("total number of virtual circuit requests: " + virtualCircuitRequests);
 
 			    System.out.println("number of successfully routed requests: " + successfulRequests);
 			 
 			    System.out.printf("percentage of successfully routed request: %.2f\n", requestSuccessRate);
-			    System.out.println("number of blocked requests: " + blockedRequests);
+			    System.out.println("number of busy requests: " + busyRequests);
 		
-			    System.out.printf("percentage of blocked requests: %.2f\n", blockedRequestRate);
+			    System.out.printf("percentage of busy requests: %.2f\n", busyRequestRate);
 
 			    float average = 0;
 			    if (!hops.isEmpty()) {
@@ -308,7 +308,7 @@ public class RoutingPerformance {
 	}
 	public static void setWorkLoad(int duration){
 		
-		boolean Blocked = false;
+		boolean busy = false;
 		
 		int delay = 0;
 		int first=0;
@@ -322,9 +322,9 @@ public class RoutingPerformance {
 				if(e.to.equals(n2)){
 					
 					System.out.println("Matched: "+n1.toString()+" "+e.to.toString());
-					if(e.blocked()){
-						Blocked = true;
-						System.out.println("Blocked at " + e.from.toString() + " " + e.to.toString());
+					if(e.busy()){
+						busy = true;
+						System.out.println("busy at " + e.from.toString() + " " + e.to.toString());
 				        break; 
 					}
 				}				
@@ -339,9 +339,9 @@ public class RoutingPerformance {
 //		
 //		for(Node n:shortestPath){
 //			for(Edge e: n.Neighbours){
-//				if(e.blocked()){
-//					Blocked = true;
-//					System.out.println("Blocked at " + e.from.toString() + " " + e.to.toString());
+//				if(e.busy()){
+//					busy = true;
+//					System.out.println("busy at " + e.from.toString() + " " + e.to.toString());
 //			        break;      
 //				}
 //			}
@@ -349,7 +349,7 @@ public class RoutingPerformance {
 		
 		first = 0;
 		second = 1;
-		if(Blocked == false){
+		if(busy == false){
 		   hops.add(shortestPath.size());	
 		   while(second < sizeOfShortestPath){
 				Node n1 = shortestPath.get(first);
@@ -375,7 +375,7 @@ public class RoutingPerformance {
 		cost.add(delay);
 		}
 		else{
-			blockedRequests++;
+			busyRequests++;
 		}
 		virtualCircuitRequests++;
 	}
@@ -486,7 +486,7 @@ class Edge{
 	public void print(){
 		System.out.println(from.toString()+" "+to.toString()+" "+delay+" "+capacity);
 	}
-	public boolean blocked(){
+	public boolean busy(){
 		return load >= capacity;
 	}
 	public void use(int duration){

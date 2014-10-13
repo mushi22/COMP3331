@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -157,13 +159,13 @@ public class RoutingPerformance {
 			    System.out.println(line);
 			}
 			
-//			//graph testing function
+			//graph testing function
 //			System.out.println("graph size: "+graph.size());
 //			for(Node n: graph){
 //				System.out.println("Src Node: "+n.toString());
 //				System.out.println(n.Neighbours.size());
 //				for(Edge e : n.Neighbours){
-//					//System.out.println("the srs and their neigbours and info: "+e.from+" "+e.to+" "+e.delay+" "+e.capacity);
+//					System.out.println("the srs and their neigbours and info: "+e.from+" "+e.to+" "+e.delay+" "+e.capacity);
 //				}
 //			}
 //			Node source = null;
@@ -259,45 +261,94 @@ public class RoutingPerformance {
 		        //update every node's workload
 		        BigDecimal a = new BigDecimal(s[0]).multiply(new BigDecimal("1000000."));
 		        BigDecimal b = new BigDecimal(s[3]).multiply(new BigDecimal("1000000."));
-		        
+		        BigDecimal pr = new BigDecimal(s[3]);
 		        int end = a.intValue();
+		  
+		        BigDecimal scaled = pr.setScale(0, RoundingMode.HALF_UP);
+		        int packetsPerRequest = scaled.intValue() * packetRate;
+		       // int pe = pr.ROUND_HALF_UP;
+		        
+		        System.out.println("rounded upto "+scaled);
+		        System.out.println("b times packet rate of "+packetRate+" = "+ packetsPerRequest);
 		        int duration = a.intValue() + b.intValue();
-		      
+		        int interval = duration/packetsPerRequest;
+		        System.out.println("interval "+interval);
 		       // maybe keep an array of all the edges separately, and use that if this doesnt work
 		    
-               for(Node n: graph){
-            	   for(Edge e: n.Neighbours){
-            		   e.update(end);
-            	   }
-               }
-               System.out.println("in here");
-            
-               System.out.println("src: "+src.toString()+" dest; "+dest.toString());
-           	
-       		   //reset all values for djikstra algorithm use
-    		   for(Node n:graph){
-    			   n.minDistance = Double.POSITIVE_INFINITY;
-    			   n.previous = null;
-    			   for(Edge e: n.Neighbours){
-    				   e.to.minDistance = Double.POSITIVE_INFINITY;
-    				   e.to.previous = null;
-    			   }
-    		   }
-    		   
-               DijkstraComputePath(src);
-               System.out.println("Printing shortest path"); 
-               shortestPath = shortestPath(dest);
-           	
-           	
- 			for(Node n:shortestPath){
-				System.out.print("["+n.toString()+"] " +n.minDistance);
-			}
- 			  System.out.println();
-               setWorkLoad(duration);
-               
-		      	        
-		      System.out.println("Finished request for " + src.toString() + " " + dest.toString() + " " + a.intValue() + " " + b.intValue() + "\n");
-		             
+		        
+			       if(networkScheme.equals("CIRCUIT")) {
+		               for(Node n: graph){
+		            	   for(Edge e: n.Neighbours){
+		            		   e.update(end);
+		            	   }
+		               }
+		              // System.out.println("in here");
+		            
+		               System.out.println("src: "+src.toString()+" dest; "+dest.toString());
+		           	
+		       		   //reset all values for djikstra algorithm use
+		    		   for(Node n:graph){
+		    			   n.minDistance = Double.POSITIVE_INFINITY;
+		    			   n.previous = null;
+		    			   for(Edge e: n.Neighbours){
+		    				   e.to.minDistance = Double.POSITIVE_INFINITY;
+		    				   e.to.previous = null;
+		    			   }
+		    		   }
+		    		   
+		               DijkstraComputePath(src);
+		               System.out.println("Printing shortest path"); 
+		               shortestPath = shortestPath(dest);
+		           	
+		           	
+		 			for(Node n:shortestPath){
+						System.out.print("["+n.toString()+"] " +n.minDistance);
+					}
+		 			  System.out.println();
+		               setWorkLoad(duration);
+		               
+				      	        
+				      System.out.println("Finished request for " + src.toString() + " " + dest.toString() + " " + a.intValue() + " " + b.intValue() + "\n");
+				          
+			     }//end if statement    
+				 if(networkScheme.equals("PACKET")){
+					 int inc = 0;
+						   
+					 for(int i = 0;i<packetsPerRequest;i++){
+					       end = end + inc;
+					       duration = end + interval;
+						   
+						   for(Node n: graph){
+			            	   for(Edge e: n.Neighbours){
+			            		   e.update(end);
+			            	   }
+			               }
+						   System.out.println("src: "+src.toString()+" dest; "+dest.toString());
+						   DijkstraComputePath(src);
+			               System.out.println("Printing shortest path"); 
+			               shortestPath = shortestPath(dest);
+			           	
+			           	
+				 			for(Node n:shortestPath){
+								System.out.print("["+n.toString()+"] " +n.minDistance);
+							}
+			 			  System.out.println();
+			               setWorkLoad(duration);
+			               
+			               inc = inc +interval;
+						 				 
+					 }
+					 System.out.println("Finished request for " + src.toString() + " " + dest.toString() + " " + a.intValue() + " " + b.intValue() + "\n");
+			          
+									 
+				 }//end of packet if
+		      
+		      
+		      
+		      
+		      
+		      
+		      
 		      }
 		      br.close();
 		      //System.out.println("total number of virtual circuit requests: " + numVCRequests);
@@ -382,7 +433,7 @@ public class RoutingPerformance {
 	
 	public static void DijkstraComputePath(Node src){
 	
-		   System.out.println("starting node for search: "+src.toString());
+		  
 		    src.minDistance = 0.;
 	        PriorityQueue<Node> NodeQueue = new PriorityQueue<Node>();
 	      	NodeQueue.add(src);
@@ -391,6 +442,7 @@ public class RoutingPerformance {
 			double weight=1;
 			double distanceThroughU=0;
 		    Node n = NodeQueue.poll();
+		    //System.out.println("starting node for search: "+n.toString());
            // System.out.println("Main node: "+n.toString());
 	            // Visit each edge exiting u
 	            for (Edge e : n.Neighbours){
@@ -400,7 +452,8 @@ public class RoutingPerformance {
 	                //System.out.println("visiting: "+v.toString());
 	                
 	                if(routingScheme.equals("LLP")){
-	                	distanceThroughU = e.load;
+	                	weight = e.load;
+	                	distanceThroughU = n.minDistance + weight;
 	                }
 	                else{
 		            
@@ -418,7 +471,10 @@ public class RoutingPerformance {
 					    NodeQueue.remove(v);
 					    v.minDistance = distanceThroughU ;
 					    v.previous = n;
+					    
 					    NodeQueue.add(v);
+					    
+					    //System.out.println("Added "+v.toString() +" to pq");
 					}
 	            }
 	        }
@@ -429,8 +485,9 @@ public class RoutingPerformance {
         //System.out.println(target.toString());
         
         for (Node node = target; node != null; node = node.previous){
+        	
+        	 //System.out.println("pathh Node "+node.toString());
         	 path.add(node);
-        	 
         }
            
         Collections.reverse(path);
@@ -445,7 +502,7 @@ class Node implements Comparable<Node>{
    public final String name;
    public ArrayList<Edge> Neighbours = new ArrayList<Edge>();	
    public double minDistance = Double.POSITIVE_INFINITY;
-   public Node previous = null;;
+   public Node previous = null;
    
    public Node(String name) {
 	super();

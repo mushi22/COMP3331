@@ -15,12 +15,16 @@ import java.util.PriorityQueue;
 
 public class RoutingPerformance {
 	
+	//these are inputs frmo command line
 	public static String networkScheme = null;
 	public static String routingScheme = null;
 	public static int packetRate;
+	//this is the graph
 	public static ArrayList<Node> graph = new ArrayList<Node>();
 	public static ArrayList<Node> allnodes = new ArrayList<Node>();
+	//the arraylist for the shortest path
 	public static ArrayList<Node> shortestPath;
+	//for all the statistics
 	public static ArrayList<Integer> hops = new ArrayList<Integer>();
 	public static ArrayList<Integer> cost = new ArrayList<Integer>();
 	public static int successfulRequests=0;
@@ -159,6 +163,7 @@ public class RoutingPerformance {
 			    System.out.println(line);
 			}
 			
+			//all the graph is created from topology file.
 			//graph testing function
 //			System.out.println("graph size: "+graph.size());
 //			for(Node n: graph){
@@ -179,8 +184,10 @@ public class RoutingPerformance {
 //				}
 //			}
 			
+			// where all the shit happens
 			processWorkLoad(wFile);
 			
+			//all the stats
 			requestSuccessRate = ((float)successfulRequests/virtualCircuitRequests * 100);
 			busyRequestRate = ((float)busyRequests/virtualCircuitRequests * 100);
 
@@ -238,10 +245,13 @@ public class RoutingPerformance {
 		      String line;
 		 
 		      System.out.println("Printing workload");
+		      //the loop for reading every line
 		      while ((line = br.readLine()) != null) {
 
 		        String[] s = line.split(" ");
+		        //srouce node
 		        String aS = s[1];
+		        //destination node
 				String bD = s[2];
 				Node src = null;
 				Node dest = null;
@@ -257,20 +267,24 @@ public class RoutingPerformance {
 						//System.out.println("dest "+dest.getName());
 					}
 				}
-
+                // at this point src is holding the source node and dest is holding the destination node
 		        //update every node's workload
+				//need to fix for large inputs
 		        BigDecimal a = new BigDecimal(s[0]).multiply(new BigDecimal("1000000."));
 		        BigDecimal b = new BigDecimal(s[3]).multiply(new BigDecimal("1000000."));
+		        
 		        BigDecimal pr = new BigDecimal(s[3]);
 		        int end = a.intValue();
 		  
-		        BigDecimal scaled = pr.setScale(0, RoundingMode.HALF_UP);
+		        BigDecimal scaled = pr.setScale(0, RoundingMode.CEILING);
 		        int packetsPerRequest = scaled.intValue() * packetRate;
 		       // int pe = pr.ROUND_HALF_UP;
 		        
 		        System.out.println("rounded upto "+scaled);
 		        System.out.println("b times packet rate of "+packetRate+" = "+ packetsPerRequest);
+		        
 		        int duration = a.intValue() + b.intValue();
+		        //this is for packet
 		        int interval = duration/packetsPerRequest;
 		        System.out.println("interval "+interval);
 		       // maybe keep an array of all the edges separately, and use that if this doesnt work
@@ -298,7 +312,7 @@ public class RoutingPerformance {
 		    		   
 		               DijkstraComputePath(src);
 		               System.out.println("Printing shortest path"); 
-		               shortestPath = shortestPath(dest);
+		               shortestPath = shortestPath(dest,src);
 		           	
 		           	
 		 			for(Node n:shortestPath){
@@ -326,7 +340,7 @@ public class RoutingPerformance {
 						   System.out.println("src: "+src.toString()+" dest; "+dest.toString());
 						   DijkstraComputePath(src);
 			               System.out.println("Printing shortest path"); 
-			               shortestPath = shortestPath(dest);
+			               shortestPath = shortestPath(dest,src);
 			           	
 			           	
 				 			for(Node n:shortestPath){
@@ -365,10 +379,13 @@ public class RoutingPerformance {
 		int first=0;
 		int second=1;
 		int sizeOfShortestPath = shortestPath.size();
+		
 		while(second < sizeOfShortestPath){
 			Node n1 = shortestPath.get(first);
 			Node n2 = shortestPath.get(second);
 			System.out.println("to match second val: "+n2.toString());
+			
+			//tryes to find the edge D->F
 			for(Edge e: n1.Neighbours){
 				if(e.to.equals(n2)){
 					
@@ -400,12 +417,14 @@ public class RoutingPerformance {
 		
 		first = 0;
 		second = 1;
+		
 		if(busy == false){
 		   hops.add(shortestPath.size());	
 		   while(second < sizeOfShortestPath){
 				Node n1 = shortestPath.get(first);
 				Node n2 = shortestPath.get(second);
 				for(Edge e: n1.Neighbours){
+					//mathcing the ed
 					if(e.to.equals(n2)){
 						e.use(duration);
 						delay = delay+e.delay;
@@ -454,6 +473,7 @@ public class RoutingPerformance {
 	                if(routingScheme.equals("LLP")){
 	                	weight = e.load;
 	                	distanceThroughU = n.minDistance + weight;
+	                	//System.out.println("nmindistance = "+n.minDistance);
 	                }
 	                else{
 		            
@@ -464,14 +484,15 @@ public class RoutingPerformance {
 		                	weight = e.delay;
 		                }
 		                
-		               
+		                
 		                distanceThroughU = n.minDistance + weight;
+		                //System.out.println("nmindistance = "+n.minDistance);
 	                }
 					if (distanceThroughU < v.minDistance) {
 					    NodeQueue.remove(v);
 					    v.minDistance = distanceThroughU ;
 					    v.previous = n;
-					    
+					   
 					    NodeQueue.add(v);
 					    
 					    //System.out.println("Added "+v.toString() +" to pq");
@@ -479,15 +500,23 @@ public class RoutingPerformance {
 	            }
 	        }
 	}
-	public static ArrayList<Node> shortestPath(Node target){
+	public static ArrayList<Node> shortestPath(Node target,Node source){
     
         ArrayList<Node> path = new ArrayList<Node>();
         //System.out.println(target.toString());
         
         for (Node node = target; node != null; node = node.previous){
         	
-        	 //System.out.println("pathh Node "+node.toString());
+        	// System.out.println("pathh Node "+node.toString());  
+        	//sometimes goes into infinte loop for packet switching,
+        
         	 path.add(node);
+        	 if(node.name.equals(source.name)){
+         		System.out.println("matched source and dest from shortest path");
+         		 break;
+         	}
+        	
+        	
         }
            
         Collections.reverse(path);
@@ -521,13 +550,16 @@ class Node implements Comparable<Node>{
 
 
 class Edge{
-	
+	//from is not nessecary
 	public final Node from;
+	// to, delay and capacity
 	public final Node to;
 	public final int delay;
 	public final int capacity;
+	
 	public int load = 0;
 	public ArrayList<Integer> workLoad;
+	//is when you use shp
 	public final int SHPDistance = 1;
 	
 	
@@ -551,6 +583,7 @@ class Edge{
 		workLoad.add(duration);
 		System.out.print("load++ for edge " + from.toString() + "->" + to.toString() + " now " + load + "/" + capacity+ "\n" );
 	}
+	//this method updates the loads on circuits, to see if they are still alive, if not it will reduce the load
 	public void update(int end){
 		 ListIterator it = workLoad.listIterator();
 	    while (it.hasNext()){

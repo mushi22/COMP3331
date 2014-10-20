@@ -35,6 +35,10 @@ public class RoutingPerformance {
 	public static int virtualCircuitRequests=0;
 	public static float requestSuccessRate=0;
 	public static float busyRequestRate=0;
+	
+	public static int totalPackets = 0;
+	public static int currentPacketValue = 0;
+
 
 	public static void main(String[] args) throws FileNotFoundException {
 
@@ -191,17 +195,22 @@ public class RoutingPerformance {
 			processWorkLoad(wFile);
 			
 			//all the stats
-			requestSuccessRate = ((float)successfulRequests/virtualCircuitRequests * 100);
-			busyRequestRate = ((float)busyRequests/virtualCircuitRequests * 100);
+			requestSuccessRate = ((float)successfulRequests/totalPackets * 100);
+			busyRequestRate = ((float)busyRequests/totalPackets * 100);
 
 			    System.out.println("total number of virtual circuit requests: " + virtualCircuitRequests);
 
-			    System.out.println("number of successfully routed requests: " + successfulRequests);
+			    System.out.println("total packets: "+ totalPackets);
+
+			    System.out.println("number of successfully routed packets: " + successfulRequests);
 			 
-			    System.out.printf("percentage of successfully routed request: %.2f\n", requestSuccessRate);
-			    System.out.println("number of busy requests: " + busyRequests);
+			    System.out.printf("percentage of successfully routed packets: %.2f\n", requestSuccessRate);
+			    System.out.println("number of blocked packets: " + busyRequests);
 		
-			    System.out.printf("percentage of busy requests: %.2f\n", busyRequestRate);
+			    System.out.printf("percentage of blocked packets: %.2f\n", busyRequestRate);
+			    
+			    
+			    
 
 			    float average = 0;
 			    if (!hops.isEmpty()) {
@@ -295,6 +304,8 @@ public class RoutingPerformance {
 		        
 		        BigDecimal scaled = pr.setScale(0, RoundingMode.CEILING);
 		        long packetsPerRequest = scaled.longValue() * packetRate;
+		        currentPacketValue = (int) packetsPerRequest;
+		        totalPackets = (int) (totalPackets + packetsPerRequest);
 		       // int pe = pr.ROUND_HALF_UP;
 		        
 		        System.out.println("rounded upto "+scaled);
@@ -477,7 +488,7 @@ public class RoutingPerformance {
 		second = 1;
 		
 		if(busy == false){
-		   hops.add(shortestPath.size());	
+		   hops.add(shortestPath.size()-1);	
 		   while(second < sizeOfShortestPath){
 				Node n1 = shortestPath.get(first);
 				Node n2 = shortestPath.get(second);
@@ -503,7 +514,6 @@ public class RoutingPerformance {
 					//mathcing the ed
 					if(e.to.equals(n1)){
 						e.use(duration);
-						delay = delay+e.delay;
 
 					}				
 				}
@@ -512,11 +522,11 @@ public class RoutingPerformance {
 				
 				
 			}
-		successfulRequests++;
+		successfulRequests=successfulRequests + currentPacketValue;
 		cost.add((int) delay);
 		}
 		else{
-			busyRequests++;
+			busyRequests=busyRequests+currentPacketValue;
 		}
 		virtualCircuitRequests++;
 	}

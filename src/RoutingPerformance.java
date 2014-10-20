@@ -9,8 +9,11 @@ import java.math.RoundingMode;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.ListIterator;
 import java.util.PriorityQueue;
+import java.util.Queue;
 
 
 public class RoutingPerformance {
@@ -44,7 +47,7 @@ public class RoutingPerformance {
 		FileInputStream wFile = new FileInputStream(args[3]);
 		
 		
-		packetRate = Integer.parseInt(args[4]);
+	    packetRate = Integer.parseInt(args[4]);
 	    
 		
 		System.out.println("network scheme:"+ " " +networkScheme);
@@ -315,7 +318,7 @@ public class RoutingPerformance {
 		               System.out.println("src: "+src.toString()+" dest; "+dest.toString());
 		           	
 		       		   //reset all values for djikstra algorithm use
-		    		   for(Node n:graph){
+		    		  for(Node n:graph){
 		    			   n.minDistance = Double.POSITIVE_INFINITY;
 		    			   n.previous = null;
 		    			   for(Edge e: n.Neighbours){
@@ -352,7 +355,7 @@ public class RoutingPerformance {
 			               }
 						   
 						   //reset all values for djikstra algorithm use
-				 		   for(Node n:graph){
+				 		  for(Node n:graph){
 				 			   n.minDistance = Double.POSITIVE_INFINITY;
 				 			   n.previous = null;
 				 			   for(Edge e: n.Neighbours){
@@ -464,14 +467,27 @@ public class RoutingPerformance {
 				}
 				first++;
 				second++;
+				
+				
 			}
-//		   for(Node n: shortestPath){
-//			   for(Edge e: n.Neighbours){
-//				   e.use(duration);
-//				   delay = delay+e.delay;
-//			   }
-//		   }
+		   first = 0;
+			second = 1;
+			while(second < sizeOfShortestPath){
+				Node n1 = shortestPath.get(first);
+				Node n2 = shortestPath.get(second);
+				for(Edge e: n2.Neighbours){
+					//mathcing the ed
+					if(e.to.equals(n1)){
+						e.use(duration);
+						delay = delay+e.delay;
 
+					}				
+				}
+				first++;
+				second++;
+				
+				
+			}
 		successfulRequests++;
 		cost.add((int) delay);
 		}
@@ -502,8 +518,9 @@ public class RoutingPerformance {
 	                //System.out.println("visiting: "+v.toString());
 	                
 	                if(routingScheme.equals("LLP")){
-	                	weight = e.load;
-	                	distanceThroughU = n.minDistance + weight;
+	                	//weight = e.load;
+	                	//Math.max(n.minDistance,e.load);
+	                	distanceThroughU = Math.max(n.minDistance,e.load);
 	                	//System.out.println("nmindistance = "+n.minDistance);
 	                }
 	                else{
@@ -557,6 +574,8 @@ public class RoutingPerformance {
         Collections.reverse(path);
         return path;
     }
+	
+
 
 }
 

@@ -1,0 +1,124 @@
+network scheme: CIRCUIT
+routing scheme: LLP
+A B 10 19
+A C 15 20
+B C 20 20
+B D 30 70
+C D 8 20
+Printing workload
+123456
+12527453
+dfsdds
+123456
+rounded upto 13
+b times packet rate of 2 = 26
+interval 486573
+src: A dest; D
+Printing shortest path
+D
+matched source and dest from shortest path
+[A] 0.0[B] 0.0[D] 0.0
+to match second val: B
+Matched: A B
+to match second val: D
+Matched: B D
+made it here
+load++ for edge A->B now 1/19
+load++ for edge B->D now 1/70
+load++ for edge B->A now 1/19
+load++ for edge D->B now 1/70
+Finished request for A D 123456 12527453
+
+7249811
+48129653
+dfsdds
+7249811
+rounded upto 49
+b times packet rate of 2 = 98
+interval 565096
+src: B dest; C
+Printing shortest path
+C
+matched source and dest from shortest path
+[B] 0.0[C] 0.0
+to match second val: C
+Matched: B C
+made it here
+load++ for edge B->C now 1/20
+load++ for edge C->B now 1/20
+Finished request for B C 7249811 48129653
+
+8975344
+6124743
+dfsdds
+8975344
+rounded upto 7
+b times packet rate of 2 = 14
+interval 1078577
+src: B dest; D
+Printing shortest path
+D
+matched source and dest from shortest path
+[B] 0.0[D] 1.0
+to match second val: D
+Matched: B D
+made it here
+load++ for edge B->D now 2/70
+load++ for edge D->B now 2/70
+Finished request for B D 8975344 6124743
+
+10915432
+106724339
+dfsdds
+10915432
+rounded upto 107
+b times packet rate of 2 = 214
+interval 549718
+src: A dest; C
+Printing shortest path
+C
+matched source and dest from shortest path
+[A] 0.0[C] 0.0
+to match second val: C
+Matched: A C
+made it here
+load++ for edge A->C now 1/20
+load++ for edge C->A now 1/20
+Finished request for A C 10915432 106724339
+
+15817634
+37634569
+dfsdds
+15817634
+rounded upto 38
+b times packet rate of 2 = 76
+interval 703318
+Released finished load A->B now 0/19
+Released finished load B->A now 0/19
+Released finished load B->D now 1/70
+Released finished load B->D now 0/70
+Released finished load D->B now 1/70
+Released finished load D->B now 0/70
+src: B dest; C
+Printing shortest path
+C
+matched source and dest from shortest path
+[B] 0.0[D] 0.0[C] 0.0
+to match second val: D
+Matched: B D
+to match second val: C
+Matched: D C
+made it here
+load++ for edge B->D now 1/70
+load++ for edge D->C now 1/20
+load++ for edge D->B now 1/70
+load++ for edge C->D now 1/20
+Finished request for B C 15817634 37634569
+
+total number of virtual circuit requests: 5
+number of successfully routed requests: 5
+percentage of successfully routed request: 100.00
+number of busy requests: 0
+percentage of busy requests: 0.00
+average number of hops per circuit: 2.40
+average cumulative propagation delay per circuit: 57.20

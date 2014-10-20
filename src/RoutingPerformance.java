@@ -317,15 +317,7 @@ public class RoutingPerformance {
 		            
 		               System.out.println("src: "+src.toString()+" dest; "+dest.toString());
 		           	
-		       		   //reset all values for djikstra algorithm use
-		    		  for(Node n:graph){
-		    			   n.minDistance = Double.POSITIVE_INFINITY;
-		    			   n.previous = null;
-		    			   for(Edge e: n.Neighbours){
-		    				   e.to.minDistance = Double.POSITIVE_INFINITY;
-		    				   e.to.previous = null;
-		    			   }
-		    		   }
+		       		
 		    		   
 		               DijkstraComputePath(src);
 		               System.out.println("Printing shortest path"); 
@@ -340,6 +332,15 @@ public class RoutingPerformance {
 		               
 				      	        
 	     		      System.out.println("Finished request for " + src.toString() + " " + dest.toString() + " " + a.longValue() + " " + b.longValue() + "\n");
+	     		     //reset all values for djikstra algorithm use
+		    		  for(Node n:graph){
+		    			   n.minDistance = Double.POSITIVE_INFINITY;
+		    			   n.previous = null;
+		    			   for(Edge e: n.Neighbours){
+		    				   e.to.minDistance = Double.POSITIVE_INFINITY;
+		    				   e.to.previous = null;
+		    			   }
+		    		   }
 			     }//end if statement    
 				 if(networkScheme.equals("PACKET")){
 					 long inc = 0;
@@ -353,16 +354,7 @@ public class RoutingPerformance {
 			            		   e.update(end);
 			            	   }
 			               }
-						   
-						   //reset all values for djikstra algorithm use
-				 		  for(Node n:graph){
-				 			   n.minDistance = Double.POSITIVE_INFINITY;
-				 			   n.previous = null;
-				 			   for(Edge e: n.Neighbours){
-				 				   e.to.minDistance = Double.POSITIVE_INFINITY;
-				 				   e.to.previous = null;
-				 			   }
-				 		   }
+				
 						   System.out.println("src: "+src.toString()+" dest; "+dest.toString());
 						
 				         
@@ -383,7 +375,15 @@ public class RoutingPerformance {
 			               setWorkLoad(duration);
 			               
 			               inc = inc +interval;
-			               
+			               //reset all values for djikstra algorithm use
+				    		  for(Node n:graph){
+				    			   n.minDistance = Double.POSITIVE_INFINITY;
+				    			   n.previous = null;
+				    			   for(Edge e: n.Neighbours){
+				    				   e.to.minDistance = Double.POSITIVE_INFINITY;
+				    				   e.to.previous = null;
+				    			   }
+				    		   }
 			             
 						 				 
 					 }
@@ -434,6 +434,30 @@ public class RoutingPerformance {
 			first++;
 			second++;
 		}
+		first = 0;
+		second =1;
+		while(second < sizeOfShortestPath){
+			while(second < sizeOfShortestPath){
+				Node n1 = shortestPath.get(first);
+				Node n2 = shortestPath.get(second);
+				System.out.println("to match second val: "+n2.toString());
+				
+				//tryes to find the edge D->F
+				for(Edge e: n2.Neighbours){
+					if(e.to.equals(n1)){
+						
+						System.out.println("Matched: "+n1.toString()+" "+e.to.toString());
+						if(e.busy()){
+							busy = true;
+							System.out.println("busy at " + e.from.toString() + " " + e.to.toString());
+					        break; 
+						}
+					}				
+				}
+				first++;
+				second++;
+			}
+		}	
 		
 		System.out.println("made it here");
 		

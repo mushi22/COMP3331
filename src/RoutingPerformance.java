@@ -53,7 +53,7 @@ public class RoutingPerformance {
 		System.out.println("network scheme:"+ " " +networkScheme);
 		System.out.println("routing scheme:"+ " " +routingScheme);
 		
-		
+		//creationing of nodes from A-Z
 		Node A = new Node("A");
 		allnodes.add(A);
 		Node B = new Node("B");

@@ -295,24 +295,32 @@ public class RoutingPerformance {
 		       // BigDecimal a = new BigDecimal(s[0]).multiply(new BigDecimal("100000000."));
 		        //BigDecimal b = new BigDecimal(s[3]).multiply(new BigDecimal("1000000."));
 		        
+		        //this is the packet rate in big decimal
 		        BigDecimal pr = new BigDecimal(s[3]);
+		        String one = "1";
 		       
+		     
+		     
 		        Long end = a.longValue();
 		        System.out.println("dfsdds");
 		        System.out.println(end);
 		  
 		        
 		        BigDecimal scaled = pr.setScale(0, RoundingMode.CEILING);
+		        
 		        long packetsPerRequest = scaled.longValue() * packetRate;
 		        currentPacketValue = (int) packetsPerRequest;
 		        totalPackets = (int) (totalPackets + packetsPerRequest);
 		       // int pe = pr.ROUND_HALF_UP;
 		        
+		        float inter = (1/packetRate);
+		        System.out.print("interval as a float " + inter);
 		        System.out.println("rounded upto "+scaled);
 		        System.out.println("b times packet rate of "+packetRate+" = "+ packetsPerRequest);
 		        
 		        long duration = a.longValue() + b.longValue();
-		        //this is for packet
+		   
+		        
 		        long interval = duration/packetsPerRequest;
 		        System.out.println("interval "+interval);
 		       // maybe keep an array of all the edges separately, and use that if this doesnt work
@@ -355,14 +363,17 @@ public class RoutingPerformance {
 			     }//end if statement    
 				 if(networkScheme.equals("PACKET")){
 					 long inc = 0;
-						   
+					 long ending = end;
+					 long d = 0;
 					 for(int i = 0;i<packetsPerRequest;i++){
-					       end = end + inc;
-					       duration = end + interval;
-						   
-						   for(Node n: graph){
+						   System.out.println("ODFHGLDKSNBFLKFDBNLFKDBNDLKFNBLDFBldkfhvdlfkjhvkldfjhlkdfnldfg");
+					       ending = ending + inc;
+					       d = end + interval;
+					       System.out.println("output of end from packet "+end);
+					       
+					       for(Node n: graph){
 			            	   for(Edge e: n.Neighbours){
-			            		   e.update(end);
+			            		   e.update(ending);
 			            	   }
 			               }
 				
@@ -385,7 +396,8 @@ public class RoutingPerformance {
 			 			  System.out.println();
 			               setWorkLoad(duration);
 			               
-			               inc = inc +interval;
+					      
+			               inc = interval;
 			               //reset all values for djikstra algorithm use
 				    		  for(Node n:graph){
 				    			   n.minDistance = Double.POSITIVE_INFINITY;
@@ -522,11 +534,22 @@ public class RoutingPerformance {
 				
 				
 			}
-		successfulRequests=successfulRequests + currentPacketValue;
+	    if(networkScheme.equals("CIRCUIT")){
+		   successfulRequests=successfulRequests + currentPacketValue;
+	    }
+	    if(networkScheme.equals("PACKET")){
+			   successfulRequests=successfulRequests + packetRate;
+		    }
 		cost.add((int) delay);
 		}
 		else{
-			busyRequests=busyRequests+currentPacketValue;
+			if(networkScheme.equals("CIRCUIT")){
+				busyRequests=busyRequests+currentPacketValue;
+			    }
+			    if(networkScheme.equals("PACKET")){
+			    	busyRequests=busyRequests+ packetRate;
+				    }
+			
 		}
 		virtualCircuitRequests++;
 	}

@@ -199,13 +199,11 @@ public class RoutingPerformance {
 			System.out.println("number of successfully routed packets: " + successfulRequests);
 			 
 			System.out.printf("percentage of successfully routed packets: %.2f\n", requestSuccessRate);
-			float blockedpercentage = 100 - requestSuccessRate;
 
 			
 			System.out.println("number of blocked packets: " + busyRequests);
 		
-			//System.out.printf("percentage of blocked packets: %.2f\n", busyRequestRate);
-			System.out.printf("percentage of blocked packets: %.2f\n", blockedpercentage);    
+			System.out.printf("percentage of blocked packets: %.2f\n", busyRequestRate);
 			    
 			    
 
@@ -526,7 +524,7 @@ public class RoutingPerformance {
 				busyRequests=busyRequests+currentPacketValue;
 			    }
 			 if(networkScheme.equals("PACKET")){
-			     busyRequests=busyRequests+ packetRate;
+			     busyRequests=busyRequests+ 1;
 		     }
 			
 		}

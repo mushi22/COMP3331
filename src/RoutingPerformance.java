@@ -510,7 +510,11 @@ public class RoutingPerformance {
 		   successfulRequests=successfulRequests + currentPacketValue;
 	    }
 	    if(networkScheme.equals("PACKET")){
-			   successfulRequests=successfulRequests + packetRate;
+	    		
+			   //successfulRequests=successfulRequests + packetRate;
+			  
+				   successfulRequests=successfulRequests + 1;
+			   
 		    }
 	    //add the delay to the cost
 		cost.add((int) delay);

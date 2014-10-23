@@ -18,7 +18,7 @@ import java.util.Queue;
 
 public class RoutingPerformance {
 	
-	//these are inputs frmo command line
+	//these are inputs from command line
 	public static String networkScheme = null;
 	public static String routingScheme = null;
 	public static int packetRate;
@@ -42,22 +42,26 @@ public class RoutingPerformance {
 
 	public static void main(String[] args) throws FileNotFoundException {
 
-		BufferedReader br;
+		BufferedReader br;	
 		String  line;
 		
+		//read in which network scheme its going to be
 		networkScheme = args[0];
+		//read in which routing scheme its going to be
 		routingScheme = args[1];
+		//read in toplogy file
 		FileInputStream tFile = new FileInputStream(args[2]);
+		//read in workload file
 		FileInputStream wFile = new FileInputStream(args[3]);
 		
-		
+		//get the packet rate and convert to integer
 	    packetRate = Integer.parseInt(args[4]);
 	    
+		//system out of netowkring scheme and routing scheme
+		//System.out.println("network scheme:"+ " " +networkScheme);
+		//System.out.println("routing scheme:"+ " " +routingScheme);
 		
-		System.out.println("network scheme:"+ " " +networkScheme);
-		System.out.println("routing scheme:"+ " " +routingScheme);
-		
-		
+		//generate all the nodes from A-Z manually
 		Node A = new Node("A");
 		allnodes.add(A);
 		Node B = new Node("B");
@@ -111,18 +115,26 @@ public class RoutingPerformance {
 		Node Z = new Node("Z");
 		allnodes.add(Z);
 		
+		
+		//use buffer reader to read in topology file and
 		br = new BufferedReader(new InputStreamReader(tFile, Charset.forName("UTF-8")));
 		try {
 			while ((line = br.readLine()) != null) {
 				String [] s = line.split(" ");
+				// read in source node
 				String a = s[0];
+				//read in destination node
 				String b = s[1];
+				//read in delay from topology file
 				int delay = Integer.parseInt(s[2]);
+				//read in capacity from the toplogy file
 				int capacity = Integer.parseInt(s[3]);
 				
 				Node src = null;
 				Node dest = null;
 				
+				
+				//for loop to find out what nodes on graph Src and destion are
 				for(Node n: allnodes){
 					
 					if(n.toString().equals(a)){
@@ -134,6 +146,7 @@ public class RoutingPerformance {
 						//System.out.println("dest "+dest.getName());
 					}
 				}
+				//create edge using information provided 
 				Edge e = null;
 				e = new Edge(src,dest,delay,capacity);
 				
@@ -167,47 +180,28 @@ public class RoutingPerformance {
 						}
 					}
 				}
-			    System.out.println(line);
+			   // System.out.println(line);
 			}
 			
-			//all the graph is created from topology file.
-			//graph testing function
-//			System.out.println("graph size: "+graph.size());
-//			for(Node n: graph){
-//				System.out.println("Src Node: "+n.toString());
-//				System.out.println(n.Neighbours.size());
-//				for(Edge e : n.Neighbours){
-//					System.out.println("the srs and their neigbours and info: "+e.from+" "+e.to+" "+e.delay+" "+e.capacity);
-//				}
-//			}
-//			Node source = null;
-//			Node target= null;
-//			for(Node n: graph){
-//				if(n.toString().equals("B")){
-//					source = n;
-//				}
-//				if(n.toString().equals("D")){
-//					target = n;
-//				}
-//			}
+
 			
-			// where all the shit happens
+			// calls the function which processes the workload file and does all the calulcaiton
 			processWorkLoad(wFile);
 			
-			//all the stats
+			//all the system outs at the end of the program
 			requestSuccessRate = ((float)successfulRequests/totalPackets * 100);
 			busyRequestRate = ((float)busyRequests/totalPackets * 100);
 
-			    System.out.println("total number of virtual circuit requests: " + virtualCircuitRequests);
+			System.out.println("total number of virtual circuit requests: " + virtualCircuitRequests);
 
-			    System.out.println("total packets: "+ totalPackets);
+			System.out.println("total number of packets: "+ totalPackets);
 
-			    System.out.println("number of successfully routed packets: " + successfulRequests);
+			System.out.println("number of successfully routed packets: " + successfulRequests);
 			 
-			    System.out.printf("percentage of successfully routed packets: %.2f\n", requestSuccessRate);
-			    System.out.println("number of blocked packets: " + busyRequests);
+			System.out.printf("percentage of successfully routed packets: %.2f\n", requestSuccessRate);
+			System.out.println("number of blocked packets: " + busyRequests);
 		
-			    System.out.printf("percentage of blocked packets: %.2f\n", busyRequestRate);
+			System.out.printf("percentage of blocked packets: %.2f\n", busyRequestRate);
 			    
 			    
 			    
@@ -218,25 +212,15 @@ public class RoutingPerformance {
 			        average = average + i; 
 			    }
 		
-			    System.out.printf("average number of hops per circuit: %.2f\n", (average/hops.size()));
+			   System.out.printf("average number of hops per circuit: %.2f\n", (average/hops.size()));
 			    average = 0;
 			    if (!cost.isEmpty()) {
 			      for (int i : cost)
 			        average = average + i;
 			    }
 		
-			    System.out.printf("average cumulative propagation delay per circuit: %.2f\n", (average/cost.size()));
-//			System.out.println(target.toString());
-//			
-//			
-//			DijkstraComputePath(source);
-//			//ArrayList<Node> path = new ArrayList<Node>();
-//			shortestPath = shortestPath(target);
-//			
-//			System.out.println("Printing shortest path"); 
-//			for(Node n:shortestPath){
-//				System.out.print("["+n.toString()+"] " +n.minDistance);
-//			}
+			   System.out.printf("average cumulative propagation delay per circuit: %.2f\n", (average/cost.size()));
+
 			
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
@@ -248,6 +232,8 @@ public class RoutingPerformance {
 
 	}
 	
+	
+	//the function gets the workload.txt file and processes
 	public static void processWorkLoad(FileInputStream f){
 	   //shortestPath.clear();
 	   int currentTime = 0;
@@ -256,7 +242,7 @@ public class RoutingPerformance {
 		
 		      String line;
 		 
-		      System.out.println("Printing workload");
+		    //  System.out.println("Printing workload");
 		      //the loop for reading every line
 		      while ((line = br.readLine()) != null) {
 
@@ -281,77 +267,69 @@ public class RoutingPerformance {
 				}
                 // at this point src is holding the source node and dest is holding the destination node
 		        //update every node's workload
-				//need to fix for large inputs
 				
 				
-				//int a = Integer.parseInt(firstvalue);
-				//int b = Integer.parseInt(secondvalue);
-				
+		
+				//we use big decimal as it can hold more data
+				//we get rid of the decimal point to make the manpulation of numbers easer
 				BigDecimal a = new BigDecimal(s[0].replace(".", ""));
 		        BigDecimal b = new BigDecimal(s[3].replace(".", ""));
-		        System.out.println(a);
-		        System.out.println(b);
 
-		       // BigDecimal a = new BigDecimal(s[0]).multiply(new BigDecimal("100000000."));
-		        //BigDecimal b = new BigDecimal(s[3]).multiply(new BigDecimal("1000000."));
 		        
 		        //this is the packet rate in big decimal
 		        BigDecimal pr = new BigDecimal(s[3]);
 		        String one = "1";
 		       
 		     
-		     
+		        // cover the a into a long (int cant hold larger values)
 		        Long end = a.longValue();
-		        System.out.println("dfsdds");
-		        System.out.println(end);
 		  
-		        
+		        //round the packet rate to the ceiling and who number
 		        BigDecimal scaled = pr.setScale(0, RoundingMode.CEILING);
+		        
 		        
 		        long packetsPerRequest = scaled.longValue() * packetRate;
 		        currentPacketValue = (int) packetsPerRequest;
 		        totalPackets = (int) (totalPackets + packetsPerRequest);
-		       // int pe = pr.ROUND_HALF_UP;
 		        
 		        float inter = (1/packetRate);
-		        System.out.print("interval as a float " + inter);
-		        System.out.println("rounded upto "+scaled);
-		        System.out.println("b times packet rate of "+packetRate+" = "+ packetsPerRequest);
+		       // System.out.print("interval as a float " + inter);
+		      //  System.out.println("rounded upto "+scaled);
+		       // System.out.println("b times packet rate of "+packetRate+" = "+ packetsPerRequest);
 		        
+		        //total duration of packets
 		        long duration = a.longValue() + b.longValue();
 		   
-		        
+		        //calculate the interval based on duration and packets per request
 		        long interval = duration/packetsPerRequest;
-		        System.out.println("interval "+interval);
-		       // maybe keep an array of all the edges separately, and use that if this doesnt work
+		       // System.out.println("interval "+interval);
 		    
-		        
+		           //check what the network scheme is, for circuit do the following
 			       if(networkScheme.equals("CIRCUIT")) {
 		               for(Node n: graph){
 		            	   for(Edge e: n.Neighbours){
 		            		   e.update(end);
 		            	   }
 		               }
-		              // System.out.println("in here");
 		            
-		               System.out.println("src: "+src.toString()+" dest; "+dest.toString());
+		               //System.out.println("src: "+src.toString()+" dest; "+dest.toString());
 		           	
 		       		
-		    		   
+		    		   //call dijstra based on the src node
 		               DijkstraComputePath(src);
-		               System.out.println("Printing shortest path"); 
+		              // System.out.println("Printing shortest path"); 
+		               //call the shortestpath function, that uses destination and src
 		               shortestPath = shortestPath(dest,src);
 		           	
 		           	
 		 			for(Node n:shortestPath){
-						System.out.print("["+n.toString()+"] " +n.minDistance);
+						//System.out.print("["+n.toString()+"] " +n.minDistance);
 					}
-		 			  System.out.println();
 		               setWorkLoad(duration);
 		               
 				      	        
-	     		      System.out.println("Finished request for " + src.toString() + " " + dest.toString() + " " + a.longValue() + " " + b.longValue() + "\n");
-	     		     //reset all values for djikstra algorithm use
+	     		      //System.out.println("Finished request for " + src.toString() + " " + dest.toString() + " " + a.longValue() + " " + b.longValue() + "\n");
+	     		     //reset all values for djikstra algorithm values
 		    		  for(Node n:graph){
 		    			   n.minDistance = Double.POSITIVE_INFINITY;
 		    			   n.previous = null;
@@ -361,15 +339,15 @@ public class RoutingPerformance {
 		    			   }
 		    		   }
 			     }//end if statement    
+			     //for PACKET network scheme do the following under the if statement
 				 if(networkScheme.equals("PACKET")){
 					 long inc = 0;
 					 long ending = end;
 					 long d = 0;
 					 for(int i = 0;i<packetsPerRequest;i++){
-						   System.out.println("ODFHGLDKSNBFLKFDBNLFKDBNDLKFNBLDFBldkfhvdlfkjhvkldfjhlkdfnldfg");
 					       ending = ending + inc;
 					       d = end + interval;
-					       System.out.println("output of end from packet "+end);
+					       //System.out.println("output of end from packet "+end);
 					       
 					       for(Node n: graph){
 			            	   for(Edge e: n.Neighbours){
@@ -377,7 +355,7 @@ public class RoutingPerformance {
 			            	   }
 			               }
 				
-						   System.out.println("src: "+src.toString()+" dest; "+dest.toString());
+						  // System.out.println("src: "+src.toString()+" dest; "+dest.toString());
 						
 				         
 				         
@@ -388,17 +366,16 @@ public class RoutingPerformance {
 			           	
 			           	
 				 			for(Node n:shortestPath){
-								System.out.print("["+n.toString()+"] " +n.minDistance);
+								//System.out.print("["+n.toString()+"] " +n.minDistance);
 							}
 				 			
 				 			 
 							
-			 			  System.out.println();
 			               setWorkLoad(duration);
 			               
 					      
 			               inc = interval;
-			               //reset all values for djikstra algorithm use
+			               //reset all values for djikstra algorithm 
 				    		  for(Node n:graph){
 				    			   n.minDistance = Double.POSITIVE_INFINITY;
 				    			   n.previous = null;
@@ -410,7 +387,7 @@ public class RoutingPerformance {
 			             
 						 				 
 					 }
-					 System.out.println("Finished request for " + src.toString() + " " + dest.toString() + " " + a.longValue() + " " + b.longValue()+ "\n");
+					 //System.out.println("Finished request for " + src.toString() + " " + dest.toString() + " " + a.longValue() + " " + b.longValue()+ "\n");
 									 
 				 }//end of packet if
 		      
@@ -422,12 +399,14 @@ public class RoutingPerformance {
 		      
 		      }
 		      br.close();
-		      //System.out.println("total number of virtual circuit requests: " + numVCRequests);
 		    }
 		    catch (Exception e) {
 		      System.err.println(e.getMessage()); // handle exception
 		    }
 	}
+	
+	
+	//the function calculates the workload using the duration
 	public static void setWorkLoad(long duration){
 		
 		boolean busy = false;
@@ -440,16 +419,16 @@ public class RoutingPerformance {
 		while(second < sizeOfShortestPath){
 			Node n1 = shortestPath.get(first);
 			Node n2 = shortestPath.get(second);
-			System.out.println("to match second val: "+n2.toString());
+			//System.out.println("to match second val: "+n2.toString());
 			
-			//tryes to find the edge D->F
+			//tries to find the edge e.g. D->
 			for(Edge e: n1.Neighbours){
 				if(e.to.equals(n2)){
 					
-					System.out.println("Matched: "+n1.toString()+" "+e.to.toString());
+					//System.out.println("Matched: "+n1.toString()+" "+e.to.toString());
 					if(e.busy()){
 						busy = true;
-						System.out.println("busy at " + e.from.toString() + " " + e.to.toString());
+						//System.out.println("busy at " + e.from.toString() + " " + e.to.toString());
 				        break; 
 					}
 				}				
@@ -457,22 +436,23 @@ public class RoutingPerformance {
 			first++;
 			second++;
 		}
+		//do the same as top but with n1 and n2 flipped (so its both ways)
 		first = 0;
 		second =1;
 		while(second < sizeOfShortestPath){
 			while(second < sizeOfShortestPath){
 				Node n1 = shortestPath.get(first);
 				Node n2 = shortestPath.get(second);
-				System.out.println("to match second val: "+n2.toString());
+				//System.out.println("to match second val: "+n2.toString());
 				
 				//tryes to find the edge D->F
 				for(Edge e: n2.Neighbours){
 					if(e.to.equals(n1)){
 						
-						System.out.println("Matched: "+n1.toString()+" "+e.to.toString());
+						//System.out.println("Matched: "+n1.toString()+" "+e.to.toString());
 						if(e.busy()){
 							busy = true;
-							System.out.println("busy at " + e.from.toString() + " " + e.to.toString());
+							//System.out.println("busy at " + e.from.toString() + " " + e.to.toString());
 					        break; 
 						}
 					}				
@@ -482,25 +462,15 @@ public class RoutingPerformance {
 			}
 		}	
 		
-		System.out.println("made it here");
-		
-		
-//		
-//		for(Node n:shortestPath){
-//			for(Edge e: n.Neighbours){
-//				if(e.busy()){
-//					busy = true;
-//					System.out.println("busy at " + e.from.toString() + " " + e.to.toString());
-//			        break;      
-//				}
-//			}
-//		}
-		
+
+		// calculates hops
 		first = 0;
 		second = 1;
 		
 		if(busy == false){
+			//subtract 1 for the hops
 		   hops.add(shortestPath.size()-1);	
+		   // do for n1 -> n2
 		   while(second < sizeOfShortestPath){
 				Node n1 = shortestPath.get(first);
 				Node n2 = shortestPath.get(second);
@@ -517,6 +487,7 @@ public class RoutingPerformance {
 				
 				
 			}
+		   //do it reverse, for n2 -> n1
 		   first = 0;
 			second = 1;
 			while(second < sizeOfShortestPath){
@@ -534,30 +505,34 @@ public class RoutingPerformance {
 				
 				
 			}
+		//based on network scheme find total amount of successfulrequestions	
 	    if(networkScheme.equals("CIRCUIT")){
 		   successfulRequests=successfulRequests + currentPacketValue;
 	    }
 	    if(networkScheme.equals("PACKET")){
 			   successfulRequests=successfulRequests + packetRate;
 		    }
+	    //add the delay to the cost
 		cost.add((int) delay);
-		}
-		else{
+		}else{
 			if(networkScheme.equals("CIRCUIT")){
 				busyRequests=busyRequests+currentPacketValue;
 			    }
-			    if(networkScheme.equals("PACKET")){
-			    	busyRequests=busyRequests+ packetRate;
-				    }
+			 if(networkScheme.equals("PACKET")){
+			     busyRequests=busyRequests+ packetRate;
+		     }
 			
 		}
 		virtualCircuitRequests++;
 	}
 	
+	//this function implements the Dijkstra based on the source node.
+	//this handles based on routing scheme what occurs
 	public static void DijkstraComputePath(Node src){
 	
 		  
 		    src.minDistance = 0.;
+		    // have a priority queue which has all the nodes, and each src node is added to it
 	        PriorityQueue<Node> NodeQueue = new PriorityQueue<Node>();
 	      	NodeQueue.add(src);
 
@@ -565,22 +540,16 @@ public class RoutingPerformance {
 			double weight=1;
 			double distanceThroughU=0;
 		    Node n = NodeQueue.poll();
-		    //System.out.println("starting node for search: "+n.toString());
-           // System.out.println("Main node: "+n.toString());
+
 	            // Visit each edge exiting u
 	            for (Edge e : n.Neighbours){
 	            	
 	            
 	                Node v = e.to;
-	                //System.out.println("visiting: "+v.toString());
 	                
 	                if(routingScheme.equals("LLP")){
-	                	//weight = e.load;
-	                	//Math.max(n.minDistance,e.load);
-	                	distanceThroughU = Math.max(n.minDistance,e.load);
-	                	//System.out.println("nmindistance = "+n.minDistance);
-	                }
-	                else{
+	                	distanceThroughU = Math.max(n.minDistance,e.load);	               
+	                }else{
 		            
 		                if(routingScheme.equals("SHP")){
 		                	weight = e.SHPDistance;
@@ -591,7 +560,6 @@ public class RoutingPerformance {
 		                
 		                
 		                distanceThroughU = n.minDistance + weight;
-		                //System.out.println("nmindistance = "+n.minDistance);
 	                }
 					if (distanceThroughU < v.minDistance) {
 					    NodeQueue.remove(v);
@@ -600,28 +568,24 @@ public class RoutingPerformance {
 					   
 					    NodeQueue.add(v);
 					    
-					    //System.out.println("Added "+v.toString() +" to pq");
 					}
 	            }
 	        }
 	}
+	
+	//the funtion calculates the shortest path using ArrayList
 	public static ArrayList<Node> shortestPath(Node target,Node source){
     
         ArrayList<Node> path = new ArrayList<Node>();
-        System.out.println(target.toString());
+       // System.out.println(target.toString());
         
         
         for (Node node = target; node != null; node = node.previous){
-        	
-        	//System.out.println("pathh Node "+node.toString());  
-        	//sometimes goes into infinte loop for packet switching,
-        
-        	
+       
         	 path.add(node);
-        	//reset all values for djikstra algorithm us
            
         	 if(node.name.equals(source.name)){
-         		System.out.println("matched source and dest from shortest path");
+         		//System.out.println("matched source and dest from shortest path");
          		 break;
          	}
         	
@@ -637,7 +601,7 @@ public class RoutingPerformance {
 }
 
 
-
+//The node class handles all nodes in out graph
 class Node implements Comparable<Node>{
    public final String name;
    public ArrayList<Edge> Neighbours = new ArrayList<Edge>();	
@@ -659,9 +623,10 @@ class Node implements Comparable<Node>{
 }
 
 
-
+//This class handles and creates the edges in the graph.
+//E.g. Form A->B, it will create the edge and that ediges properites
 class Edge{
-	//from is not nessecary
+
 	public final Node from;
 	// to, delay and capacity
 	public final Node to;
@@ -673,7 +638,8 @@ class Edge{
 	//is when you use shp
 	public final long SHPDistance = 1;
 	
-	
+	//function that creates edge from src to destination
+	//also has delay and capcity values of this lingk
 	public Edge(Node from, Node to, long delay, long capacity){
 			
 		super();
@@ -683,16 +649,18 @@ class Edge{
 		this.capacity = capacity;
 		this.workLoad = new ArrayList<Integer>();
 	}
+	//print out edge
 	public void print(){
-		System.out.println(from.toString()+" "+to.toString()+" "+delay+" "+capacity);
+		//System.out.println(from.toString()+" "+to.toString()+" "+delay+" "+capacity);
 	}
+	//checks if edge is busy
 	public boolean busy(){
 		return load >= capacity;
 	}
 	public void use(long duration){
 		load++;
 		workLoad.add((int) duration);
-		System.out.print("load++ for edge " + from.toString() + "->" + to.toString() + " now " + load + "/" + capacity+ "\n" );
+		//System.out.print("load++ for edge " + from.toString() + "->" + to.toString() + " now " + load + "/" + capacity+ "\n" );
 	}
 	//this method updates the loads on circuits, to see if they are still alive, if not it will reduce the load
 	public void update(Long end){
@@ -703,7 +671,7 @@ class Edge{
 	        if (end >= curr){
 	          it.remove();
 	          load--;
-	          System.out.println("Released finished load " + from.toString() + "->" + to.toString() + " now " + load + "/" + capacity);
+	         // System.out.println("Released finished load " + from.toString() + "->" + to.toString() + " now " + load + "/" + capacity);
 	        }
 	      }
 		

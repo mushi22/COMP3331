@@ -548,7 +548,8 @@ public class RoutingPerformance {
 	                Node v = e.to;
 	                
 	                if(routingScheme.equals("LLP")){
-	                	distanceThroughU = Math.max(n.minDistance,e.load);	               
+	                	int w = (int) Math.max(n.minDistance,e.load);
+	                	distanceThroughU = n.minDistance + w;
 	                }else{
 		            
 		                if(routingScheme.equals("SHP")){
@@ -563,7 +564,7 @@ public class RoutingPerformance {
 	                }
 					if (distanceThroughU < v.minDistance) {
 					    NodeQueue.remove(v);
-					    v.minDistance = distanceThroughU ;
+					    v.minDistance = distanceThroughU;
 					    v.previous = n;
 					   
 					    NodeQueue.add(v);

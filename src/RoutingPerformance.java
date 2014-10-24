@@ -288,7 +288,7 @@ public class RoutingPerformance {
 		        //round the packet rate to the ceiling and who number
 		        BigDecimal scaled = pr.setScale(0, RoundingMode.CEILING);
 		        
-		        
+		 
 		        long packetsPerRequest = scaled.longValue() * packetRate;
 		        currentPacketValue = (int) packetsPerRequest;
 		        totalPackets = (int) (totalPackets + packetsPerRequest);
@@ -300,11 +300,14 @@ public class RoutingPerformance {
 		        
 		        //total duration of packets
 		        long duration = a.longValue() + b.longValue();
-		   
+	
+
+		        //long duration = scaled.longValue();
 		        //calculate the interval based on duration and packets per request
-		        long interval = duration/packetsPerRequest;
-		       // System.out.println("interval "+interval);
-		    
+		        //long test = 2 * b.longValue();
+		       // packetDuration = 1/ packetRate;
+		        long interval =  duration/packetsPerRequest;
+		        
 		           //check what the network scheme is, for circuit do the following
 			       if(networkScheme.equals("CIRCUIT")) {
 		               for(Node n: graph){
@@ -342,11 +345,17 @@ public class RoutingPerformance {
 			     }//end if statement    
 			     //for PACKET network scheme do the following under the if statement
 				 if(networkScheme.equals("PACKET")){
-					 long inc = 0;
+					 //changed long inc = 0 to long inc = interval
+					 //this made success rate go up .20%. (think the first interval was being set to 0 at first
+					 //when it wasnt 0
+					 //still going down, so we are not unfreeing update properly
+					 long inc = interval;
 					 long ending = end;
 					 long d = 0;
 					 for(int i = 0;i<packetsPerRequest;i++){
+						  // System.out.println(inc);
 					       ending = ending + inc;
+					       //System.out.println(ending);
 					       d = end + interval;
 					       //System.out.println("output of end from packet "+end);
 					       
@@ -422,7 +431,7 @@ public class RoutingPerformance {
 			Node n2 = shortestPath.get(second);
 			//System.out.println("to match second val: "+n2.toString());
 			
-			//tries to find the edge e.g. D->
+			//tries to find the edge e.g. D->F
 			for(Edge e: n1.Neighbours){
 				if(e.to.equals(n2)){
 					
@@ -506,7 +515,7 @@ public class RoutingPerformance {
 				
 				
 			}
-		//based on network scheme find total amount of successfulrequestions	
+		//based on network scheme find total amount of successful requests	
 	    if(networkScheme.equals("CIRCUIT")){
 		   successfulRequests=successfulRequests + currentPacketValue;
 	    }

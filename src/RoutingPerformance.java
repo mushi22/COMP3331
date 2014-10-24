@@ -307,6 +307,13 @@ public class RoutingPerformance {
 		        //long test = 2 * b.longValue();
 		       // packetDuration = 1/ packetRate;
 		        long interval =  duration/packetsPerRequest;
+		        //our interval is wrong. using report examples it needs to be 0.5
+		        //our one is .48888
+		        //we need to round up finish time for packet, then times by packetrage
+		        //e.g. 13 * 2 = 26 (packetperrequest)
+		        //then we need to round up finish time again, then divide this by the packetrequest rate
+		        //e.g, 26 + 13 = 0.5  <---------this needs to be out interval
+		        
 		        
 		           //check what the network scheme is, for circuit do the following
 			       if(networkScheme.equals("CIRCUIT")) {

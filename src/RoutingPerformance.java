@@ -293,12 +293,12 @@ public class RoutingPerformance {
 		        currentPacketValue = (int) packetsPerRequest;
 		        totalPackets = (int) (totalPackets + packetsPerRequest);
 		        long newinter = 0;
-		        //System.out.println(packetRate);
+
+
 		        if (packetRate == 1){
 		        	BigDecimal onebd = new BigDecimal("10000000.");
 		        	BigDecimal onein = new BigDecimal(((onebd.toString().replace(".", ""))));
 			        newinter = onein.longValue();
-			        //System.out.println(newinter);
 
 		        }else {
 			        float inter = (float) (1.0/packetRate);
@@ -308,25 +308,11 @@ public class RoutingPerformance {
 			        BigDecimal cd = ab.multiply(db);
 			        
 			        BigDecimal in = new BigDecimal(((cd.toString().replace(".", ""))));
-			        //System.out.println("sdfsdf " + in);
 			        
 			        newinter = in.longValue();
 			        //System.out.println(newinter);
 		        }
-		        //BigDecimal value = new BigDecimal(Float.toString(inter));
-		        //BigDecimal value2 = value.multiply(new BigDecimal("1.000000"));
-			//	BigDecimal value3 = new BigDecimal(((String) value2).replace(".", ""));
-		      //  String bigDecimalString = String.valueOf(value2.doubleValue());
-
-		    //    System.out.println(bigDecimalString);
-
-		        //BigDecimal ab = new BigDecimal(inter.multiply(new BigDecimal("1000000.")));
-				//System.out.println(ab.intValue());
-		        
-		        //System.out.println(inter);
-		      // System.out.println("interval as a float " + inter);
-		      //  System.out.println("rounded upto "+scaled);
-		       // System.out.println("b times packet rate of "+packetRate+" = "+ packetsPerRequest);
+		       
 		        
 		        //total duration of packets
 		        long duration = a.longValue() + b.longValue();
@@ -334,23 +320,8 @@ public class RoutingPerformance {
 		        
 		        
 
-		        //long duration = scaled.longValue();
-		        //calculate the interval based on duration and packets per request
-		        //long test = 2 * b.longValue();
-		       // packetDuration = 1/ packetRate;
-		       // System.out.println(duration);
-		       // System.out.println(packetsPerRequest);
+		        //set interval to the one calcualted at the top
 		       long interval = newinter;
-		        //long interval =  duration/packetsPerRequest;
-		        
-		    
-		        //System.out.println(interval);
-		        //our interval is wrong. using report examples it needs to be 0.5
-		        //our one is .48888
-		        //we need to round up finish time for packet, then times by packetrage
-		        //e.g. 13 * 2 = 26 (packetperrequest)
-		        //then we need to round up finish time again, then divide this by the packetrequest rate
-		        //e.g, 26 + 13 = 0.5  <---------this needs to be out interval
 		        
 		        
 		        
